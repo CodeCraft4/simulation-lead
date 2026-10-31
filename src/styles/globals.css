@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the data-theme attribute set by ThemeProvider. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* ---- Design tokens (see docs/04-design-system.md) ---- */
+:root {
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #edf1f9;
+  --ink: #0b1f4d;
+  --ink-2: #334366;
+  --ink-3: #5b6b8c;
+  --line: #e3e8f2;
+  --brand: #0b1f4d;
+  --brand-2: #1e3a8a;
+  --brand-fg: #ffffff;
+  --brand-soft: #e3e9f7;
+  --accent: #7c5cff;
+  --success: #15803d;
+  --warning: #c2410c;
+  --danger: #dc2626;
+  --wa-bg: #efe7dd;
+  --wa-out: #d9fdd3;
+  --wa-green: #008069;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #070f24;
+  --surface: #0f1b3d;
+  --surface-2: #16244d;
+  --ink: #eef2fb;
+  --ink-2: #c3ceea;
+  --ink-3: #93a3cc;
+  --line: #22325e;
+  --brand: #ffffff;
+  --brand-2: #c7d2fe;
+  --brand-fg: #0b1f4d;
+  --brand-soft: #1c2c5c;
+  --accent: #a28bff;
+  --success: #4ade80;
+  --warning: #fdba74;
+  --danger: #f87171;
+  color-scheme: dark;
+}
+
+/* Expose tokens as Tailwind utilities: bg-surface, text-ink-3, border-line, bg-brand ... */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-fg: var(--brand-fg);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-wa-bg: var(--wa-bg);
+  --color-wa-out: var(--wa-out);
+  --color-wa-green: var(--wa-green);
+  /* Fixed app colours: the Lead Engine app is always dark blue + white, in both themes. */
+  --color-navy: #0b1f4d;
+  --color-navy-2: #1e3a8a;
+  --color-navy-soft: #c3ceea;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
