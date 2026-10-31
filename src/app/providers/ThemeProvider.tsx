@@ -11,12 +11,12 @@ interface ThemeContextValue {
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-const STORAGE_KEY = 'lead-engine:theme'
+// Only an explicit choice is stored (new key: older versions saved the system theme on load).
+const STORAGE_KEY = 'lead-engine:theme-choice'
 
+/** Light by default, whatever the system setting; dark only when the viewer picks it. */
 function initialTheme(): Theme {
-  const saved = readStorage(STORAGE_KEY)
-  if (saved === 'light' || saved === 'dark') return saved
-  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return readStorage(STORAGE_KEY) === 'dark' ? 'dark' : 'light'
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -24,11 +24,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
-    writeStorage(STORAGE_KEY, theme)
   }, [theme])
 
-  const toggleTheme = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), [])
-  const value = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme, toggleTheme])
+  const chooseTheme = useCallback((next: Theme) => {
+    writeStorage(STORAGE_KEY, next)
+    setTheme(next)
+  }, [])
+  const toggleTheme = useCallback(() => chooseTheme(theme === 'dark' ? 'light' : 'dark'), [chooseTheme, theme])
+  const value = useMemo(() => ({ theme, setTheme: chooseTheme, toggleTheme }), [theme, chooseTheme, toggleTheme])
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
